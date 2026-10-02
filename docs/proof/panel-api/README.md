@@ -33,10 +33,10 @@ The [captured results](results.json) retain the command payload, route transitio
 - Running version: `2026.9.7`.
 - Running build: `2026.9.7-16d7e99487b5-2026-10-02T07-12-27.499Z`.
 - The development checkout was at `16d7e99487b589a88a9fd737ed409119e9b44df5` with uncommitted changes. The Gateway remained on the same process throughout the proof.
-- The local bodies of `openPluginPanelForRequester` and `host.ui.openPanel` matched PR head `9a8891cbe87da63b3e001cd87962c41f69119839`, ignoring whitespace. This is **not** a clean-checkout test of the entire PR head.
+- The local bodies of `openPluginPanelForRequester` and `host.ui.openPanel` matched both the initial PR head `9a8891cbe87da63b3e001cd87962c41f69119839` and the later head `75d0e25d1375f05b93d0939f8e178c4ec03bc35c`, ignoring whitespace. The intervening commit changed only the Gateway test file. This is **not** a clean-checkout test of the entire PR head.
 - The external Collab implementation is the one published in [openclaw/collab at c05ba1d](https://github.com/openclaw/collab/tree/c05ba1d74d4e2596bbf402615049b4ba684442bb).
 
-This proves live plugin-tool dispatch, requester-targeted transport, navigation, and rendered panel loading. The backend call was made directly over the authenticated Control UI connection, not selected by a model in a new agent turn. The second client used the same operator identity; this is not a cross-user authorization test. Retirement, revoked permissions, disconnected requesters, and every navigation race remain covered by the PR's focused tests, not by this recording.
+This proves live plugin-tool dispatch, requester-targeted transport, navigation, and rendered panel loading. The backend call was made directly over the authenticated Control UI connection, not selected by a model in a new agent turn. The second client used the same operator identity; this is not a cross-user authorization test. Retirement, revoked permissions, disconnected requesters, and every navigation race were not exercised by this capture; see the PR's focused tests for additional coverage.
 
 ## Reproduce
 

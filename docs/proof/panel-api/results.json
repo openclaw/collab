@@ -89,6 +89,11 @@
       "backendPanelApi": true,
       "browserPanelApi": true
     },
-    "gatewayRestartedForProof": false
+    "gatewayRestartedForProof": false,
+    "laterComparedPrHead": "75d0e25d1375f05b93d0939f8e178c4ec03bc35c",
+    "laterHeadImplementationComparisonIgnoringWhitespace": {
+      "backendPanelApi": true,
+      "browserPanelApi": true
+    }
   }
 }
