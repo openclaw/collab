@@ -1,7 +1,5 @@
-import { createRequire } from "node:module";
+import { chromium } from "playwright-core";
 import fs from "node:fs/promises";
-const require = createRequire(new URL("../node_modules/openclaw/package.json", import.meta.url));
-const { chromium } = require("playwright-core");
 const browser = await chromium.connectOverCDP(
   process.env.COLLAB_CDP_URL || "http://127.0.0.1:18804",
 );

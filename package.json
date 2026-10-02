@@ -1,19 +1,32 @@
 {
-  "name": "openclaw-plugin-collab",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@openclaw/collab",
+  "version": "0.2.0",
+  "description": "Write with your OpenClaw agent using inline comments and edits you approve.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openclaw/collab.git"
+  },
+  "homepage": "https://github.com/openclaw/collab#readme",
+  "bugs": {
+    "url": "https://github.com/openclaw/collab/issues"
+  },
   "files": [
     "dist",
     "openclaw.plugin.json",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "docs"
   ],
   "type": "module",
   "scripts": {
+    "link:host": "node scripts/link-host.mjs",
     "build": "tsc -p tsconfig.json && openclaw plugins build",
     "validate": "openclaw plugins validate --json",
     "pack": "openclaw plugins pack --json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "test:ui": "tsx scripts/verify-ui.ts"
   },
   "dependencies": {
     "@tiptap/core": "^3.0.0",
@@ -30,12 +43,17 @@
     "@types/node": "^24",
     "esbuild": "0.28.2",
     "jsdom": "^26.1.0",
-    "openclaw": "file:/Users/jalehman/Projects/openclaw-memory-runtime",
+    "playwright-core": "1.63.0",
     "tsx": "^4.20.0",
     "typescript": "5.9.3"
   },
   "peerDependencies": {
     "openclaw": ">=2026.9.7"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
   },
   "openclaw": {
     "extensions": [

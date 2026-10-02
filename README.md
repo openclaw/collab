@@ -1,80 +1,106 @@
 # Collab
 
-Write with your agent, without giving up control of the document.
+**Write with your agent. Keep control of the document.**
 
-Collab adds a Markdown editor to an OpenClaw session’s side panel. Write and format text, highlight a passage, leave a comment, and send your feedback to the agent. Its replies and suggested edits appear beside your draft. The draft changes only when you accept a suggestion.
+Collab is a Markdown editor for [OpenClaw](https://github.com/openclaw/openclaw). Open a workspace file, highlight a passage, and leave a comment. Your agent replies and suggests changes right beside the text. You accept or decline each suggestion.
 
-## Use it
+It lives in the session side panel, so the conversation and the document stay together. You can also open it as a full page from the main sidebar.
 
-1. In a session, open **Side panel → Collab**. You can also open **Collab** from the main sidebar for a larger view.
-2. Write directly, use Markdown shortcuts, or import a `.md` file.
-3. Select a passage and choose **+ Comment** (`⌘/Ctrl + Alt + M`).
-4. Choose **Send to agent**. This sends a real message to the same session; no copy/paste is needed.
-5. Open **Suggestions** to compare the old and new text. Choose **Accept change** or **Decline**.
+<img src="docs/screenshots/inline-review.png" alt="Collab showing an inline comment thread and an agent's proposed rewrite, with Decline and Accept change buttons" width="560">
 
-The toolbar supports headings, emphasis, lists, tasks, quotes, code, tables, undo, and redo. Markdown links and images render in the editor. Export downloads your current draft as Markdown, including unsaved edits.
+*A comment, a reply, and a proposed edit in the real editor. Screenshots use sample documents.*
 
-## Fast by design
+## What you can do
 
-- Typing, selection, undo, and highlighting run locally in Tiptap/ProseMirror.
-- Saves wait for a 650 ms typing pause; no network request is made for each keystroke.
-- Replies and suggestions arrive through events, without polling or replacing the editor.
-- The editor is initialized only when a Collab view opens. The current OpenClaw builder ships one browser bundle, so this defers initialization, not the bundle download.
-- No paid collaboration service, CDN script, or remote editor backend is required.
+- **Comment on a passage.** Select text and choose **+ Comment**. Saved comments and your replies go to the agent in the same session automatically.
+- **Review edits in place.** See the original and proposed text together. Choose **Accept change** to apply the suggestion.
+- **Work with your files.** Open workspace Markdown, save a draft as a new file, or rename a file without losing its comments and suggestions.
+- **Write and format.** Use headings, emphasis, lists, tasks, quotes, code, tables, links, and images. Typing stays local; saving waits for a short pause.
+- **Keep your place.** Each session has its own active document. Switching files preserves their review history.
 
-## Data and approval
+No separate collaboration account, paid service, or remote editor backend is required. Comments are delivered through your existing OpenClaw agent session.
 
-Each session has one document. The Gateway stores it in `<OpenClaw state>/collab/documents/`, as an atomically replaced JSON file containing Markdown, comments, and suggestions. Session keys are hashed for filenames. Switching sessions switches documents.
+## Try it
 
-Agent tools:
+**Development preview:** Collab is not yet published on ClawHub or npm. It currently needs an OpenClaw development build with native plugin UI, typed feature contracts, and the panel-opening APIs in [openclaw/openclaw#163428](https://github.com/openclaw/openclaw/pull/163428). The published `2026.9.7` version number alone does not establish compatibility. See [Build from source](#build-from-source).
 
-| Tool             | Purpose                                             |
-| ---------------- | --------------------------------------------------- |
-| `collab_read`    | Read the draft, revision, comments, and suggestions |
-| `collab_create`  | Initialize an untouched document                    |
-| `collab_reply`   | Reply to a comment                                  |
-| `collab_propose` | Propose an exact Markdown replacement               |
+Once installed, enable **Settings → Labs → Custom plugin UI** in OpenClaw, then:
 
-There is no agent tool for accepting an edit. Approval is a UI operation. Proposed text is matched exactly; missing or ambiguous passages are rejected. Unrelated edits can be retained when accepting a still-valid suggestion. Concurrent document saves use revision checks instead of silently overwriting another view.
+1. Open a session and choose **Side panel → Collab**.
+2. Choose **Open…** to select a workspace Markdown file, or start with the session draft.
+3. Highlight a passage and choose **+ Comment** (`⌘/Ctrl + Alt + M`).
+4. Leave feedback. The agent's reply and proposed edit appear inline.
+5. Choose **Accept change** or **Decline**.
 
-Unsaved drafts are retained in browser storage at the save boundary and when the panel closes. After a conflict, export the local draft before reloading. This is not simultaneous multiplayer editing, and a crash before the debounce boundary can lose the last fraction of a second of typing.
+You can also ask: “Open `notes/draft.md` in Collab.” The agent can open the side panel and read the active document.
 
-Comments follow local editing through ProseMirror transaction mappings. Quote context reconnects them after reloading; removed or ambiguous passages are not silently assigned to a different quote. Resolved comments and reviewed suggestions remain in history.
+### Formatting and file controls
 
-## Develop
+Select text to reveal **+ Comment** and **Format**. Expand **Format** for the editing toolbar.
 
-This repository targets the running OpenClaw **2026.9.7 development checkout**, with its native Control UI and typed feature-contract APIs. It is private and not published to npm. The initial development dependency points to the verified host checkout at `/Users/jalehman/Projects/openclaw-memory-runtime`; change that dependency if building on another machine. The version range alone does not guarantee these development APIs exist in another build.
+<img src="docs/screenshots/formatting.png" alt="The selection toolbar with Comment and Format, expanded to show headings, emphasis, lists, tasks, quotes, code, tables, undo, and redo" width="560">
+
+The **•••** menu includes **Save as…**, **Download Markdown**, and **Copy Collab link**. Click a filename to rename it; click the path below it to copy the full path. Save as and rename never overwrite an existing file. Download Markdown includes your unsaved edits.
+
+Collab follows your Control UI theme, including live theme changes.
+
+<details>
+<summary>Dark theme</summary>
+
+<img src="docs/screenshots/dark-theme.png" alt="The same sample document and inline discussion using a dark theme" width="560">
+
+</details>
+
+## How edits and data work
+
+Workspace Markdown stays in its original file. Collab keeps comments, suggestions, and document state under `<OpenClaw state>/collab/documents/`. Review cards are never inserted into the Markdown file.
+
+| Agent tool | Purpose |
+| --- | --- |
+| `collab_read` | Read the active document, path, revision, and review history |
+| `collab_open` | Open a workspace Markdown file in the session side panel |
+| `collab_create` | Initialize an untouched session draft |
+| `collab_reply` | Reply to a comment thread |
+| `collab_propose` | Suggest an exact Markdown replacement |
+
+There is no Collab agent tool for accepting a suggestion. Acceptance requires a writable UI session. This approval boundary applies to Collab tools; it does not remove any separate filesystem tools your agent already has.
+
+Revision checks prevent silent overwrites from another view or an external file edit. Missing or ambiguous passages cannot receive a proposed replacement. Comments follow edits; removed or ambiguous quotes are not silently attached to different text. Failed feedback delivery offers **Retry** without losing the saved comment.
+
+Unsaved drafts are retained in browser storage at save boundaries and when the panel closes. Recovery is separate for each file. **Reload saved version** downloads your local draft before loading the saved text.
+
+## Build from source
+
+Use a Node.js version supported by your OpenClaw checkout and a **built, compatible OpenClaw development checkout**. Collab treats OpenClaw as an optional peer dependency so installing editor dependencies does not install a second Gateway. OpenClaw is still required to build and run the plugin.
 
 ```sh
-npm install
+git clone https://github.com/openclaw/collab.git
+cd collab
+npm ci
+
+# Link your built OpenClaw checkout without changing the shared lockfile.
+npm run link:host -- /absolute/path/to/openclaw
+
 npm run check
 npm test
 npm run build
 npm run validate
-./node_modules/.bin/openclaw plugins install --link --force .
+./node_modules/.bin/openclaw plugins install --link .
 ```
 
-Use the repository’s CLI: a different `openclaw` on PATH may target an older schema. Native UI requires **Settings → Labs → Custom plugin UI**, already enabled on the development Gateway.
+Use the linked checkout's CLI for installation and validation; another `openclaw` on PATH may have an older plugin schema. Install into the intended Gateway configuration. This repo does not rebuild or restart your host.
 
-After backend changes, build and run:
+For browser verification, install Google Chrome and run `npm run test:ui`. Set `COLLAB_BROWSER_EXECUTABLE` to use a different Chromium executable. The script runs the real editor against a temporary service and sample files; it does not change production documents. Screenshots and results go into the ignored `artifacts/` folder.
 
-```sh
-./node_modules/.bin/openclaw plugins reload collab
-```
-
-After browser-only changes, build and use **Reload plugin UI**, or:
-
-```sh
-./node_modules/.bin/openclaw gateway call plugins.controlUi.reload --params '{"pluginId":"collab"}'
-```
-
-A Gateway restart is not required. `npm run pack` creates a plugin archive.
+After backend changes, build and run `./node_modules/.bin/openclaw plugins reload collab`. After browser-only changes, build and use **Reload plugin UI**. `npm run pack` creates the distributable archive. See [Publishing to ClawHub](docs/PUBLISHING.md) for release preparation.
 
 ## Current limits
 
-- One document per session; no document library or real-time multiplayer cursors.
-- Documents up to 60,000 characters. The document and its review history must also fit the host’s bounded message size (240 KB in this version). Comments and suggestions each have a 500-entry ceiling; the total history budget can be reached sooner.
-- Tiptap’s Markdown support is still beta. Supported Markdown is normalized on save; this is not a byte-preserving source editor. Arbitrary HTML, MDX, and custom Markdown extensions are outside this version’s scope.
-- Proposals are exact Markdown replacements, not a general merge engine.
+- This is not real-time multiplayer editing. There is one active document per session, with file switching and per-document history.
+- Documents are limited to 60,000 characters / 64 KB of UTF-8 text. The document and review history must also fit the host's 240 KB transport budget. Comments and suggestions each have a 500-entry ceiling; the total budget can be reached sooner.
+- [Tiptap's Markdown support](https://tiptap.dev/docs/editor/markdown/getting-started/basic-usage) is beta. YAML front matter is preserved separately, but supported body Markdown is normalized on save. Arbitrary HTML, MDX, and custom Markdown extensions are outside this version's scope.
+- Proposals use exact text replacements, not general-purpose merging. A crash before the save debounce boundary can lose the last fraction of a second of typing.
 
-The editor uses the open-source [Tiptap Markdown extension](https://tiptap.dev/docs/editor/markdown/getting-started/basic-usage). Tests cover content round-trips, anchored selections, permission refreshes, approval enforcement, save conflicts, and stale suggestions.
+## License
+
+[MIT](LICENSE). Built with the open-source Tiptap and ProseMirror editor libraries.

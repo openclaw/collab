@@ -3,11 +3,20 @@ import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import type { Node as PMNode } from "@tiptap/pm/model";
 import type { Anchor, Comment } from "./model.js";
+export const threadKey = new PluginKey<DecorationSet>("collab-inline-threads");
 export const anchorKey = new PluginKey<DecorationSet>("collab-comments");
 export const CommentHighlights = Extension.create({
   name: "collabComments",
   addProseMirrorPlugins() {
     return [
+      new Plugin({
+        key: threadKey,
+        state: {
+          init: () => DecorationSet.empty,
+          apply: (tr, previous) => tr.getMeta(threadKey) ?? previous.map(tr.mapping, tr.doc),
+        },
+        props: { decorations: (state) => threadKey.getState(state) },
+      }),
       new Plugin({
         key: anchorKey,
         state: {

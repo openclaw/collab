@@ -1,3 +1,5 @@
+import { createFeatureClient } from "openclaw/plugin-sdk/feature-contract";
+import { contract } from "./contract.js";
 import type { ControlUiPlugin, ControlUiPanel } from "openclaw/plugin-sdk/control-ui";
 // Defer editor initialization until a Collab surface is opened. The host currently publishes one browser bundle.
 const mount: ControlUiPanel["mount"] = (container, context) => {
@@ -66,6 +68,49 @@ export default {
           },
           dispose: () => view?.dispose?.(),
           focus: () => view?.focus?.(),
+        };
+      },
+    });
+    host.ui.registerPage({
+      id: "open",
+      label: "Open in Collab",
+      mount(container, context) {
+        let request = 0;
+        const open = async (props: Readonly<Record<string, string>>) => {
+          const generation = ++request;
+          const sessionKey = props.sessionKey || host.sessions.selectedKey;
+          const agentId =
+            props.agentId || host.agents.selectedId || host.agents.defaultId || undefined;
+          container.textContent = "Opening document in Collab…";
+          try {
+            if (!sessionKey || !props.path)
+              throw new Error("Choose a session and a workspace Markdown document.");
+            await createFeatureClient(contract, host).invoke(
+              "open",
+              { path: props.path },
+              { sessionKey, agentId },
+            );
+            if (generation === request && !context.signal.aborted)
+              host.ui.openPanel("document", { sessionKey, agentId });
+          } catch (error) {
+            if (generation === request)
+              container.textContent = error instanceof Error ? error.message : String(error);
+          }
+        };
+        void open(context.props);
+        return {
+          update(next) {
+            if (
+              next.props.path !== context.props.path ||
+              next.props.sessionKey !== context.props.sessionKey
+            ) {
+              context = next;
+              void open(next.props);
+            }
+          },
+          dispose() {
+            request++;
+          },
         };
       },
     });

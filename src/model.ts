@@ -21,6 +21,10 @@ export type Proposal = {
 };
 export type Document = {
   sessionKey: string;
+  filePath?: string;
+  fileHash?: string;
+  savedFromDraftRevision?: number;
+  lastRename?: { fromPath: string; revision: number };
   title: string;
   markdown: string;
   revision: number;
@@ -30,7 +34,7 @@ export type Document = {
   updatedAt: string;
 };
 export const WELCOME =
-  "# Make something worth sharing\n\nA good draft starts a conversation. Write here, or import a Markdown file, then invite your agent to help.\n\n## A simple way to collaborate\n\n1. **Write naturally.** Format with the toolbar or familiar Markdown shortcuts.\n2. **Highlight a passage.** Add a comment about what you want to change.\n3. **Send to agent.** Your feedback goes straight into this session.\n4. **Review the suggestions.** Accept the changes you like. You stay in control.\n\n> Your words first. Your agent beside you.\n\nTry selecting this sentence and asking your agent to make it more concise.\n";
+  "# Make something worth sharing\n\nA good draft starts a conversation. Write here, or open a workspace Markdown file, then invite your agent to help.\n\n## A simple way to collaborate\n\n1. **Write naturally.** Use familiar Markdown shortcuts, or formatting in Document options.\n2. **Highlight a passage.** Add a comment about what you want to change.\n3. **Send to agent.** Your feedback goes straight into this session.\n4. **Review the suggestions.** Accept the changes you like. You stay in control.\n\n> Your words first. Your agent beside you.\n\nTry selecting this sentence and asking your agent to make it more concise.\n";
 export function initialDocument(sessionKey: string): Document {
   return {
     sessionKey,
@@ -57,4 +61,10 @@ export function applyProposal(
 ): string {
   const at = uniquePosition(markdown, proposal.before);
   return markdown.slice(0, at) + proposal.after + markdown.slice(at + proposal.before.length);
+}
+
+/** Keep document metadata outside the rich-text body, unchanged by normal editing. */
+export function splitFrontMatter(markdown: string) {
+  const match = markdown.match(/^---\r?\n[\s\S]*?\r?\n(?:---|\.\.\.)\r?\n/);
+  return { preamble: match?.[0] ?? "", body: match ? markdown.slice(match[0].length) : markdown };
 }

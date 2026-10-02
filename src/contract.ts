@@ -37,6 +37,10 @@ const proposalSchema = object({
 });
 const documentSchema = object({
   sessionKey: short(),
+  filePath: Type.Optional(short()),
+  fileHash: Type.Optional(short()),
+  savedFromDraftRevision: Type.Optional(Type.Integer()),
+  lastRename: Type.Optional(object({ fromPath: short(), revision: Type.Integer() })),
   title: short(),
   markdown: text(),
   revision: Type.Integer(),
@@ -48,10 +52,34 @@ const documentSchema = object({
 export const contract = defineFeatureContract({
   pluginId: "collab",
   operations: {
+    draft: {
+      kind: "action",
+      description: "Return to the session draft, retaining workspace document history.",
+      input: object({}),
+      output: documentSchema,
+    },
+    files: {
+      kind: "query",
+      description: "Find Markdown documents in this session's workspace, most recent first.",
+      input: object({ query: Type.Optional(short()) }),
+      output: object({
+        workspace: short(),
+        files: Type.Array(object({ path: short(), name: short(), modifiedAt: short() })),
+        truncated: Type.Boolean(),
+      }),
+    },
+    open: {
+      kind: "action",
+      description:
+        "Open an existing workspace Markdown file in this session's Collab sidebar. Accepts a workspace-relative or absolute .md path. Keeps review history per document; never changes file contents. The result identifies the active file. Use collab_read before proposing edits; only human acceptance writes proposals to the file.",
+      input: object({ path: short() }),
+      output: documentSchema,
+      tool: { name: "collab_open", label: "Open document in Collab" },
+    },
     read: {
       kind: "query",
       description:
-        "Read the current session Collab Markdown document, comments, replies, pending suggestions, and revision. Call before replying or proposing an edit.",
+        "Read the active document and its workspace filePath in this session’s Collab, including comments, replies, pending suggestions, and revision. Call before replying or proposing an edit.",
       input: object({}),
       output: documentSchema,
       tool: { name: "collab_read", label: "Read Collab document" },
@@ -63,6 +91,20 @@ export const contract = defineFeatureContract({
       input: object({ title: short(), markdown: text() }),
       output: documentSchema,
       tool: { name: "collab_create", label: "Create Collab document" },
+    },
+    save_as: {
+      kind: "action",
+      description:
+        "Save the session draft as a new workspace Markdown file, preserving its comments and suggestions. Never overwrites an existing file. Human editor only.",
+      input: object({ path: short(), revision: Type.Integer() }),
+      output: documentSchema,
+    },
+    rename: {
+      kind: "action",
+      description:
+        "Rename the active workspace Markdown file in its current folder, keeping comments and suggestions. Never overwrites another file. Human editor only.",
+      input: object({ path: short(), name: short(), revision: Type.Integer() }),
+      output: documentSchema,
     },
     save: {
       kind: "action",
