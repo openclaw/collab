@@ -124,3 +124,36 @@ test("ambiguous replacements, cross-session state, and read-only actions", async
   assert.equal((await store.read("../../other-session")).revision, 0);
   assert.equal((await h.read({}, human)).markdown, "same same");
 });
+
+test("transport-size limits reject before publication and preserve the readable document", async (t) => {
+  const { handlers: h, store } = await fixture(t);
+  const d = await h.create({ title: "Valid", markdown: "Keep this." }, agent);
+  await assert.rejects(
+    async () =>
+      h.save(
+        { title: d.title, markdown: "x".repeat(60001), revision: d.revision, anchors: [] },
+        human,
+      ),
+    /60,000/,
+  );
+  await assert.rejects(
+    () =>
+      store.mutate("session-one", (doc) => {
+        for (let i = 0; i < 100; i++)
+          doc.proposals.push({
+            id: String(i),
+            before: "a".repeat(2000),
+            after: "b".repeat(2000),
+            reason: "Review",
+            baseRevision: 1,
+            status: "pending",
+            createdAt: "",
+          });
+      }),
+    /size limit/,
+  );
+  const after = await h.read({}, human);
+  assert.equal(after.markdown, "Keep this.");
+  assert.equal(after.proposals.length, 0);
+  assert.equal(after.revision, d.revision);
+});

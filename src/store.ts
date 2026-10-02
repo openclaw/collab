@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { initialDocument, type Document } from "./model.js";
+import { initialDocument, MAX_DOCUMENT_CHARS, type Document } from "./model.js";
 /** Serializes each document's read-modify-write; failed writes never poison the queue. */
 export class DocumentStore {
   private tails = new Map<string, Promise<unknown>>();
@@ -33,14 +33,28 @@ export class DocumentStore {
     const pending = previous.then(async () => {
       const doc = await this.load(key);
       edit(doc);
-      if (doc.markdown.length > 200000)
-        throw new Error("Document exceeds the 200,000-character limit.");
+      if (doc.markdown.length > MAX_DOCUMENT_CHARS)
+        throw new Error("Document exceeds the 60,000-character limit.");
       doc.version++;
       doc.updatedAt = new Date().toISOString();
+      // Budget before publication: the host's feature transport is bounded to
+      // 64 KiB per string, 4096 JSON nodes, and 256 KiB serialized bytes.
+      // A rejected history entry must never make the saved document unreadable.
+      const serialized = JSON.stringify(doc);
+      const countNodes = (value: unknown): number =>
+        1 +
+        (value && typeof value === "object"
+          ? Object.values(value).reduce<number>((n, v) => n + countNodes(v), 0)
+          : 0);
+      if (Buffer.byteLength(serialized, "utf8") > 240000 || countNodes(doc) > 3800) {
+        throw new Error(
+          "This document's review history has reached its size limit. Export the draft and continue in a new session.",
+        );
+      }
       await mkdir(this.directory, { recursive: true, mode: 0o700 });
       const destination = this.filename(key),
         temporary = destination + "." + randomUUID() + ".tmp";
-      await writeFile(temporary, JSON.stringify(doc), { mode: 0o600 });
+      await writeFile(temporary, serialized, { mode: 0o600 });
       await rename(temporary, destination);
       return doc;
     });

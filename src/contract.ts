@@ -1,7 +1,7 @@
 import { Type, type TSchema } from "typebox";
 import { defineFeatureContract } from "openclaw/plugin-sdk/feature-contract";
 const short = () => Type.String({ maxLength: 4000 });
-const text = () => Type.String({ maxLength: 200000 });
+const text = () => Type.String({ maxLength: 60000 });
 const id = () => Type.String({ minLength: 1, maxLength: 200 });
 const object = <T extends Record<string, TSchema>>(p: T) =>
   Type.Object(p, { additionalProperties: false });

@@ -250,9 +250,9 @@ function setup(container: HTMLElement, context: Context) {
       while (dirty && !disposed) {
         const savedEpoch = epoch;
         const payload = snapshot()!;
-        if (payload.markdown.length > 200000)
+        if (payload.markdown.length > 60000)
           throw new Error(
-            "This document is too large. Export your draft, then keep it under 200,000 characters.",
+            "This document is too large. Export your draft, then keep it under 60,000 characters.",
           );
         status.textContent = "Saving…";
         stash();
@@ -674,7 +674,7 @@ function setup(container: HTMLElement, context: Context) {
       if (!file || !editor) return;
       if (file.size > 800000) throw new Error("Choose a Markdown file under 800 KB.");
       const markdown = await file.text();
-      if (markdown.length > 200000) throw new Error("Choose a document under 200,000 characters.");
+      if (markdown.length > 60000) throw new Error("Choose a document under 60,000 characters.");
       if (disposed) return;
       // Keep the current draft recoverable before replacing it.
       if (doc!.revision > 0 && editor.getText().trim()) {

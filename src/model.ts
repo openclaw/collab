@@ -1,3 +1,4 @@
+export const MAX_DOCUMENT_CHARS = 60_000;
 export type Anchor = { quote: string; prefix: string; suffix: string; orphaned?: boolean };
 export type Reply = { id: string; body: string; author: "you" | "agent"; createdAt: string };
 export type Comment = {

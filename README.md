@@ -73,7 +73,7 @@ A Gateway restart is not required. `npm run pack` creates a plugin archive.
 ## Current limits
 
 - One document per session; no document library or real-time multiplayer cursors.
-- Documents up to 200,000 characters, 500 comments, and 500 suggestions.
+- Documents up to 60,000 characters. The document and its review history must also fit the host’s bounded message size (240 KB in this version). Comments and suggestions each have a 500-entry ceiling; the total history budget can be reached sooner.
 - Tiptap’s Markdown support is still beta. Supported Markdown is normalized on save; this is not a byte-preserving source editor. Arbitrary HTML, MDX, and custom Markdown extensions are outside this version’s scope.
 - Proposals are exact Markdown replacements, not a general merge engine.
 
