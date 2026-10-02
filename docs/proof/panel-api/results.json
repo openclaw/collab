@@ -1,0 +1,94 @@
+{
+  "capturedAt": "2026-10-02T16:32:38.981Z",
+  "transport": "Two real Control UI WebSocket clients on the running Gateway; no mocked SDK or service.",
+  "sessionKey": "agent:main:dashboard:86d95580-d917-40bc-bee2-b16ca00566eb",
+  "before": {
+    "requesterPanels": 0,
+    "observerPanels": 0
+  },
+  "backend": {
+    "request": {
+      "ok": true,
+      "toolName": "collab_open",
+      "source": "plugin"
+    },
+    "events": {
+      "requester": [
+        {
+          "event": "ui.command",
+          "sessionKey": "agent:main:dashboard:86d95580-d917-40bc-bee2-b16ca00566eb",
+          "agentId": "main",
+          "command": {
+            "kind": "panel",
+            "panel": "plugin",
+            "pluginId": "collab",
+            "panelId": "document",
+            "open": true
+          }
+        }
+      ],
+      "observer": []
+    },
+    "panelHeading": "A panel, opened by a plugin",
+    "requesterPanelVisible": true,
+    "observerPanelVisible": false
+  },
+  "documentSha256": {
+    "before": "72a9b2347221daf4f487959cfe2d42c1e986681ecda0ee5a438208accd8ae897",
+    "after": "72a9b2347221daf4f487959cfe2d42c1e986681ecda0ee5a438208accd8ae897"
+  },
+  "errors": [],
+  "screenshotRedactions": [
+    "Navigation sidebar excluded by capturing main only",
+    "Recent-session list masked",
+    "Absolute workspace file path masked"
+  ],
+  "browser": {
+    "capturedAt": "2026-10-02T16:33:02.737Z",
+    "crossPluginPanelError": "A plugin can open only its own registered panel.",
+    "entry": "/plugin?plugin=collab&id=open&p.path=collab%2Fdocs%2Fexamples%2Fpanel-proof.md&p.sessionKey=agent%3Amain%3Adashboard%3A86d95580-d917-40bc-bee2-b16ca00566eb&p.agentId=main",
+    "routes": [
+      "/plugin?plugin=collab&id=open&p.path=collab%2Fdocs%2Fexamples%2Fpanel-proof.md&p.sessionKey=agent%3Amain%3Adashboard%3A86d95580-d917-40bc-bee2-b16ca00566eb&p.agentId=main",
+      "/chat/main/dashboard/86d95580-d917-40bc-bee2-b16ca00566eb?__openclawSessionKey=agent%3Amain%3Adashboard%3A86d95580-d917-40bc-bee2-b16ca00566eb"
+    ],
+    "events": [
+      {
+        "pluginId": "collab",
+        "panelId": "document",
+        "sessionKey": "agent:main:dashboard:86d95580-d917-40bc-bee2-b16ca00566eb",
+        "agentId": "main",
+        "open": true
+      }
+    ],
+    "finalRoute": "/chat/main/dashboard/86d95580-d917-40bc-bee2-b16ca00566eb?__openclawSessionKey=agent%3Amain%3Adashboard%3A86d95580-d917-40bc-bee2-b16ca00566eb",
+    "serviceCalls": [
+      {
+        "method": "plugins.sessionAction",
+        "pluginId": "collab",
+        "actionId": "open"
+      },
+      {
+        "method": "plugins.sessionAction",
+        "pluginId": "collab",
+        "actionId": "read"
+      }
+    ],
+    "serverUiCommands": 0,
+    "observerPanelVisible": false,
+    "documentUnchanged": true,
+    "errors": []
+  },
+  "runtime": {
+    "version": "2026.9.7",
+    "buildId": "2026.9.7-16d7e99487b5-2026-10-02T07-12-27.499Z",
+    "gatewayPid": 49494,
+    "sourceCheckoutCommit": "16d7e99487b589a88a9fd737ed409119e9b44df5",
+    "sourceCheckoutHasUncommittedChanges": true,
+    "prHead": "9a8891cbe87da63b3e001cd87962c41f69119839",
+    "implementationComparisonIgnoringWhitespace": {
+      "backendPanelApi": true,
+      "browserPanelApi": true
+    },
+    "gatewayRestartedForProof": false
+  }
+}
