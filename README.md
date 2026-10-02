@@ -1,5 +1,10 @@
 # Collab
 
+> [!IMPORTANT]
+> **Temporary requirement: run OpenClaw from `main`.** Build and run OpenClaw at commit [`721523b1de6b`](https://github.com/openclaw/openclaw/commit/721523b1de6bbef9ab8e8def71580eeef6f1962d) or a later commit on `main`. This commit merged [PR #163428](https://github.com/openclaw/openclaw/pull/163428), which adds the APIs Collab needs to open its panel. Builds without these APIs fail when opening documents through the agent or an “Open in Collab” link.
+>
+> **ClawHub publishing is on hold until an OpenClaw release includes these changes.** The source is available here in the meantime.
+
 **Write with your agent. Keep control of the document.**
 
 Collab is a Markdown editor for [OpenClaw](https://github.com/openclaw/openclaw). Open a workspace file, highlight a passage, and leave a comment. Your agent replies and suggests changes right beside the text. You accept or decline each suggestion.
@@ -22,7 +27,7 @@ No separate collaboration account, paid service, or remote editor backend is req
 
 ## Try it
 
-**Development preview:** Collab is not yet published on ClawHub or npm. It currently needs an OpenClaw development build with native plugin UI, typed feature contracts, and the panel-opening APIs in [openclaw/openclaw#163428](https://github.com/openclaw/openclaw/pull/163428). The published `2026.9.7` version number alone does not establish compatibility. See [Build from source](#build-from-source).
+**Development preview:** Collab is available from source, not ClawHub or npm. Use the OpenClaw `main` build described above and follow [Build from source](#build-from-source). The published `2026.9.7` version number alone does not establish compatibility.
 
 Once installed, enable **Settings → Labs → Custom plugin UI** in OpenClaw, then:
 

@@ -2,6 +2,9 @@
 
 Collab is a **code plugin**, not a skill. Its package name is `@openclaw/collab`; its runtime plugin ID is `collab`. Publishing on npm is not required for ClawHub distribution.
 
+> [!IMPORTANT]
+> **ClawHub publishing is on hold until an OpenClaw release includes [PR #163428](https://github.com/openclaw/openclaw/pull/163428).** Until then, use the public source with an OpenClaw `main` build at commit [`721523b1de6b`](https://github.com/openclaw/openclaw/commit/721523b1de6bbef9ab8e8def71580eeef6f1962d) or later. Do not publish a ClawHub development preview before that release.
+
 ## Before the first release
 
 The source is public, but there is no ClawHub release yet. The current plugin uses development-only host APIs, including the panel-opening APIs in [openclaw/openclaw#163428](https://github.com/openclaw/openclaw/pull/163428).
@@ -13,7 +16,7 @@ Before a general release:
 3. Test the packed plugin on that host, including file open, inline feedback, proposal acceptance, and panel opening.
 4. Sign in to ClawHub with an account allowed to publish for the **openclaw** publisher. GitHub organization access and ClawHub publisher access are separate checks.
 
-For an earlier development preview, explicitly document and test the required host build. Do not claim a compatible stable release just to satisfy metadata validation.
+Once a compatible OpenClaw release is available, update the version requirements and remove the temporary README banner before publishing. Do not claim a compatible stable release just to satisfy metadata validation.
 
 ### Checks completed on October 2, 2026
 
