@@ -1,0 +1,52 @@
+{
+  "name": "openclaw-plugin-collab",
+  "version": "0.1.0",
+  "private": true,
+  "files": [
+    "dist",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && openclaw plugins build",
+    "validate": "openclaw plugins validate --json",
+    "pack": "openclaw plugins pack --json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.0.0",
+    "@tiptap/extension-image": "^3.31.4",
+    "@tiptap/extension-placeholder": "^3.0.0",
+    "@tiptap/extension-table": "^3.0.0",
+    "@tiptap/extension-task-item": "^3.0.0",
+    "@tiptap/extension-task-list": "^3.0.0",
+    "@tiptap/markdown": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
+    "typebox": "^1.3.17"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "esbuild": "0.28.2",
+    "jsdom": "^26.1.0",
+    "openclaw": "file:/Users/jalehman/Projects/openclaw-memory-runtime",
+    "tsx": "^4.20.0",
+    "typescript": "5.9.3"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.9.7"
+  },
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "controlUi": "./src/control-ui.ts",
+    "compat": {
+      "pluginApi": ">=2026.9.7"
+    },
+    "build": {
+      "openclawVersion": "2026.9.7"
+    }
+  }
+}

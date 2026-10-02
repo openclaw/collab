@@ -1,0 +1,601 @@
+.collab {
+  --c-text: var(--text, #e7e8ee);
+  --c-muted: var(--muted, #9b9eaf);
+  --c-bg: var(--bg, #15161b);
+  --c-panel: var(--bg-elevated, #1c1d24);
+  --c-line: var(--border, #32343f);
+  --c-accent: #8f92ff;
+  color: var(--c-text);
+  background: var(--c-bg);
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font:
+    13px/1.5 -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  container-type: inline-size;
+}
+.collab * {
+  box-sizing: border-box;
+}
+.collab [hidden] {
+  display: none !important;
+}
+.collab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--c-line);
+  flex-wrap: wrap;
+}
+.collab-brand,
+.collab-header-actions,
+.collab-title-row,
+.collab-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.collab-brand strong {
+  font-size: 17px;
+  letter-spacing: -0.6px;
+}
+.collab-symbol {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--c-accent);
+}
+.collab-eyebrow {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  color: var(--c-muted);
+  margin-left: 6px;
+}
+.collab-status {
+  color: var(--c-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.collab-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 7px 10px;
+  background: transparent;
+  color: var(--c-text);
+  font: inherit;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background 100ms;
+}
+.collab-btn:hover {
+  background: color-mix(in srgb, var(--c-text) 8%, transparent);
+}
+.collab-btn:focus-visible,
+.collab input:focus-visible,
+.collab textarea:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}
+.collab-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.collab-primary {
+  background: var(--c-accent);
+  color: #131425;
+  font-weight: 650;
+  box-shadow: 0 1px 2px #0002;
+}
+.collab-primary:hover {
+  background: #a6a8ff;
+}
+.collab-title-row {
+  padding: 13px 20px 9px;
+}
+.collab-title {
+  flex: 1;
+  width: 0;
+  color: var(--c-text);
+  background: transparent;
+  border: none;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  padding: 5px 0;
+  outline: none;
+}
+.collab-title-row > .collab-btn {
+  color: var(--c-muted);
+  font-size: 11px;
+}
+.collab-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 18px 12px;
+  border-bottom: 1px solid var(--c-line);
+}
+.collab-format {
+  min-width: 30px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+.collab-format[aria-label="Bold"] {
+  font-weight: 800;
+}
+.collab-format[aria-label="Italic"] {
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+.collab-comment-button {
+  color: var(--c-accent);
+  margin-left: auto;
+  background: color-mix(in srgb, var(--c-accent) 9%, transparent);
+}
+.collab-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.collab-paper-wrap {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.collab-paper {
+  max-width: 810px;
+  padding: 40px 42px 100px;
+  margin: 0 auto;
+}
+.collab .tiptap {
+  outline: none;
+  min-height: 250px;
+  font:
+    16px/1.8 Georgia,
+    "Times New Roman",
+    serif;
+  overflow-wrap: anywhere;
+  color: var(--c-text);
+}
+.collab .tiptap > :first-child {
+  margin-top: 0;
+}
+.collab .tiptap p {
+  margin: 0.9em 0;
+}
+.collab .tiptap h1,
+.collab .tiptap h2,
+.collab .tiptap h3,
+.collab .tiptap h4,
+.collab .tiptap h5,
+.collab .tiptap h6 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+  margin: 1.6em 0 0.65em;
+  font-weight: 650;
+}
+.collab .tiptap h1 {
+  font-size: 32px;
+  line-height: 1.18;
+}
+.collab .tiptap h2 {
+  font-size: 23px;
+}
+.collab .tiptap h3 {
+  font-size: 19px;
+}
+.collab .tiptap strong {
+  font-weight: 700;
+}
+.collab .tiptap a {
+  color: var(--c-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.collab .tiptap blockquote {
+  margin: 1.6em 0;
+  border-left: 3px solid var(--c-accent);
+  padding: 1px 0 1px 22px;
+  color: var(--c-muted);
+  font-style: italic;
+}
+.collab .tiptap ul,
+.collab .tiptap ol {
+  padding-left: 1.45em;
+}
+.collab .tiptap li {
+  padding-left: 0.2em;
+  margin: 0.5em 0;
+}
+.collab .tiptap li p {
+  margin: 0.4em 0;
+}
+.collab .tiptap hr {
+  border: 0;
+  border-top: 1px solid var(--c-line);
+  margin: 2em 0;
+}
+.collab .tiptap pre {
+  background: color-mix(in srgb, var(--c-text) 5%, transparent);
+  padding: 18px;
+  border: 1px solid var(--c-line);
+  border-radius: 9px;
+  overflow: auto;
+  font:
+    12px/1.7 ui-monospace,
+    SFMono-Regular,
+    monospace;
+}
+.collab .tiptap code {
+  font:
+    0.85em ui-monospace,
+    SFMono-Regular,
+    monospace;
+  background: color-mix(in srgb, var(--c-text) 6%, transparent);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.collab .tiptap pre code {
+  background: none;
+  padding: 0;
+}
+.collab .tiptap table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1.5em 0;
+  font:
+    13px/1.6 -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+.collab .tiptap td,
+.collab .tiptap th {
+  border: 1px solid var(--c-line);
+  padding: 8px 12px;
+  position: relative;
+  vertical-align: top;
+  min-width: 1em;
+}
+.collab .tiptap th {
+  background: color-mix(in srgb, var(--c-text) 5%, transparent);
+  text-align: left;
+}
+.collab .tiptap .selectedCell:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #8f92ff20;
+  pointer-events: none;
+}
+.collab .tiptap ul[data-type="taskList"] {
+  padding: 0;
+  list-style: none;
+}
+.collab .tiptap ul[data-type="taskList"] li {
+  display: flex;
+  gap: 9px;
+}
+.collab .tiptap ul[data-type="taskList"] label {
+  padding-top: 5px;
+}
+.collab .tiptap ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+.collab .tiptap input[type="checkbox"] {
+  accent-color: var(--c-accent);
+}
+.collab .tiptap .is-editor-empty:first-child:before {
+  content: attr(data-placeholder);
+  color: var(--c-muted);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+.collab-highlight {
+  background: #e6b95330;
+  border-bottom: 2px solid #d7b45495;
+  cursor: pointer;
+}
+.collab-highlight:hover {
+  background: #e6b95355;
+}
+.collab-rail {
+  width: 295px;
+  flex: 0 0 295px;
+  border-left: 1px solid var(--c-line);
+  background: color-mix(in srgb, var(--c-text) 2%, var(--c-bg));
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.collab-tabs {
+  display: flex;
+  position: sticky;
+  top: 0;
+  padding: 10px;
+  gap: 5px;
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--c-line);
+  z-index: 1;
+}
+.collab-tabs .collab-btn {
+  flex: 1;
+  font-size: 12px;
+  color: var(--c-muted);
+}
+.collab-tabs .active {
+  background: color-mix(in srgb, var(--c-accent) 12%, transparent);
+  color: var(--c-accent);
+}
+.collab-card {
+  margin: 12px;
+  padding: 15px;
+  border: 1px solid var(--c-line);
+  border-radius: 10px;
+  background: var(--c-bg);
+  box-shadow: 0 2px 8px #0000000a;
+}
+.collab-card p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.collab-card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.collab-card-meta span {
+  color: var(--c-muted);
+  text-transform: capitalize;
+}
+.collab-quote-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 95px;
+  overflow: auto;
+  padding: 7px 10px;
+  border-left: 2px solid #d5b968;
+  border-radius: 0;
+  background: #e6b9530c;
+  color: var(--c-muted);
+}
+.collab-comment-body {
+  margin: 13px 0;
+}
+.collab-actions {
+  justify-content: flex-end;
+}
+.collab-actions .collab-btn {
+  font-size: 11px;
+}
+.collab-reply {
+  border-top: 1px solid var(--c-line);
+  padding-top: 10px;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.collab-reply strong {
+  font-size: 10px;
+  color: var(--c-accent);
+}
+.collab-reply p {
+  margin: 5px 0 10px;
+}
+.collab-reply-form {
+  display: flex;
+  gap: 5px;
+  border-top: 1px solid var(--c-line);
+  padding-top: 9px;
+  margin-top: 8px;
+}
+.collab-reply-form input {
+  width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--c-text);
+  font: inherit;
+  font-size: 12px;
+  outline: none;
+}
+.collab-resolved {
+  opacity: 0.6;
+}
+.collab-empty {
+  text-align: center;
+  color: var(--c-muted);
+  padding: 40px 24px;
+  font-size: 12px;
+}
+.collab-empty strong {
+  display: block;
+  color: var(--c-text);
+  font-size: 13px;
+  font-weight: 550;
+}
+.collab-empty p {
+  line-height: 1.8;
+}
+.collab-empty-icon {
+  display: block;
+  font-size: 35px;
+  color: var(--c-accent);
+  margin-bottom: 15px;
+}
+.collab-comment-composer {
+  margin: 12px;
+  padding: 12px;
+  border: 1px solid var(--c-accent);
+  border-radius: 10px;
+  background: var(--c-bg);
+}
+.collab-anchor-quote {
+  color: var(--c-muted);
+  font-size: 11px;
+  border-left: 2px solid #d5b968;
+  padding-left: 10px;
+  margin: 0 0 10px;
+  max-height: 90px;
+  overflow: auto;
+}
+.collab-comment-composer textarea {
+  width: 100%;
+  min-height: 90px;
+  resize: vertical;
+  background: transparent;
+  color: var(--c-text);
+  border: 0;
+  outline: none;
+  font: inherit;
+  padding: 4px 0;
+}
+.collab-diff {
+  margin: 15px 0;
+}
+.collab-diff-label {
+  color: var(--c-muted);
+  letter-spacing: 1px;
+  font-size: 9px;
+  margin-top: 10px;
+}
+.collab-diff pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    11px/1.7 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  padding: 9px;
+  margin: 4px 0;
+  border-radius: 5px;
+  max-height: 300px;
+  overflow: auto;
+}
+.collab-before {
+  background: #e15e6712;
+  border-left: 2px solid #d56a72;
+}
+.collab-after {
+  background: #58bb9112;
+  border-left: 2px solid #65b695;
+}
+.collab-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 20px;
+  gap: 10px;
+  border-top: 1px solid var(--c-line);
+  color: var(--c-muted);
+  font-size: 10px;
+}
+.collab-alert {
+  margin: 8px 20px 0;
+  padding: 10px 12px;
+  border: 1px solid #d5b96860;
+  border-radius: 7px;
+  color: var(--c-text);
+  background: #d5b96810;
+  font-size: 12px;
+}
+@container (max-width: 760px) {
+  .collab-body {
+    flex-direction: column;
+  }
+  .collab-paper-wrap {
+    flex: 1 1 60%;
+    min-height: 200px;
+  }
+  .collab-paper {
+    padding: 28px 26px 65px;
+  }
+  .collab-rail {
+    width: 100%;
+    flex: 0 1 34%;
+    min-height: 140px;
+    max-height: 45%;
+    border-left: 0;
+    border-top: 1px solid var(--c-line);
+  }
+  .collab-cards {
+    display: flex;
+    align-items: flex-start;
+    overflow-x: auto;
+  }
+  .collab-card {
+    flex: 0 0 min(320px, 85%);
+  }
+  .collab-empty {
+    padding: 20px;
+    text-align: left;
+  }
+  .collab-empty-icon {
+    display: none;
+  }
+  .collab-eyebrow {
+    display: none;
+  }
+  .collab-footer > :last-child {
+    display: none;
+  }
+}
+@container (max-width: 420px) {
+  .collab-header {
+    padding: 12px;
+    gap: 6px;
+  }
+  .collab-header-actions {
+    gap: 6px;
+  }
+  .collab-title-row {
+    padding: 8px 12px;
+  }
+  .collab-title {
+    font-size: 15px;
+  }
+  .collab-toolbar {
+    padding: 6px 10px;
+  }
+  .collab-paper {
+    padding: 22px 18px 50px;
+  }
+  .collab .tiptap {
+    font-size: 15px;
+  }
+  .collab .tiptap h1 {
+    font-size: 26px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .collab * {
+    transition: none !important;
+  }
+}
+.collab .tiptap img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5em 0;
+}

@@ -1,0 +1,28 @@
+{
+  "id": "collab",
+  "name": "Collab",
+  "description": "Write together. A fast Markdown editor with anchored comments and human-approved agent suggestions.",
+  "version": "0.1.0",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "activation": {
+    "onStartup": true
+  },
+  "controlUi": {
+    "entry": "dist/control-ui/ccece8819484d5e07a15ce09b904ad21251485e6f9b5c20eba7eea64dd94d90b/index.js",
+    "styles": [
+      "dist/control-ui/ccece8819484d5e07a15ce09b904ad21251485e6f9b5c20eba7eea64dd94d90b/index.css"
+    ]
+  },
+  "contracts": {
+    "tools": [
+      "collab_create",
+      "collab_propose",
+      "collab_read",
+      "collab_reply"
+    ]
+  }
+}
