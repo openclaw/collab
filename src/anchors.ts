@@ -62,6 +62,7 @@ export function makeAnchor(
 ): Anchor {
   const { text, positions } = projection;
   const start = positions.findIndex((p) => p >= from);
+  if (start < 0 || positions[start] >= to) return { quote: "", prefix: "", suffix: "" };
   let end = positions.findIndex((p) => p >= to);
   if (end < 0) end = positions.length;
   return {

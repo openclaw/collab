@@ -112,3 +112,36 @@ test("permission refresh and comment decorations do not trigger document saves",
   assert.equal(updates, 1);
   e.destroy();
 });
+
+function nodeRange(doc: Editor["state"]["doc"], typeName: string) {
+  let range: { from: number; to: number } | null = null;
+  doc.descendants((node, pos) => {
+    if (node.type.name === typeName) range = { from: pos, to: pos + node.nodeSize };
+  });
+  if (!range) throw new Error(`missing ${typeName}`);
+  return range;
+}
+
+test("selections on horizontal rules do not quote neighboring text", () => {
+  const middle = new Editor({
+    extensions: [StarterKit],
+    content: "<p>Hello</p><hr><p>World</p>",
+  });
+  const rule = nodeRange(middle.state.doc, "horizontalRule");
+  const between = makeAnchor(middle.state.doc, rule.from, rule.to);
+  assert.equal(between.quote, "");
+  assert.equal(between.prefix, "");
+  assert.equal(between.suffix, "");
+  middle.destroy();
+
+  const trailing = new Editor({
+    extensions: [StarterKit],
+    content: `<p>${"A".repeat(80)}</p><hr>`,
+  });
+  const endRule = nodeRange(trailing.state.doc, "horizontalRule");
+  const afterText = makeAnchor(trailing.state.doc, endRule.from, endRule.to);
+  assert.equal(afterText.quote, "");
+  assert.equal(afterText.prefix, "");
+  assert.equal(afterText.suffix, "");
+  trailing.destroy();
+});
