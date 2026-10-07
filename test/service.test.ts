@@ -552,3 +552,51 @@ test("a rename publication failure restores the old path and all active review s
   assert.equal(await readFile(d.filePath!, "utf8"), "Keep this.");
   assert.deepEqual(await readdir(workspace), ["old.md"]);
 });
+
+test("a read-only editor session cannot open, create, reply, or propose", async (t) => {
+  const { mkdir, writeFile } = await import("node:fs/promises");
+  const { store, directory } = await fixture(t);
+  const workspace = path.join(directory, "workspace");
+  await mkdir(workspace);
+  await writeFile(path.join(workspace, "note.md"), "Hello there.");
+  const h = createHandlers(store, () => {}, { workspace: () => workspace });
+  const reader = {
+    source: "session-action",
+    action: { sessionKey: "session-one", client: { scopes: ["operator.read"] } },
+  } as FeatureInvocationContext;
+  await assert.rejects(() => h.open({ path: "note.md" }, reader), /human editor/);
+  await assert.rejects(() => h.create({ title: "Nope", markdown: "no" }, reader), /human editor/);
+  const draft = await h.create({ title: "Draft", markdown: "Hello there." }, agent);
+  const commented = await h.comment(
+    {
+      body: "note",
+      anchor: { quote: "Hello there.", prefix: "", suffix: "" },
+      revision: draft.revision,
+    },
+    human,
+  );
+  await assert.rejects(
+    () => h.reply({ commentId: commented.comments[0].id, body: "no" }, reader),
+    /human editor/,
+  );
+  await assert.rejects(
+    () =>
+      h.propose(
+        {
+          before: "Hello there.",
+          after: "Hi.",
+          reason: "shorter",
+          revision: commented.revision,
+        },
+        reader,
+      ),
+    /human editor/,
+  );
+  const replied = await h.reply(
+    { commentId: commented.comments[0].id, body: "from the agent" },
+    agent,
+  );
+  assert.equal(replied.comments[0].replies[0].author, "agent");
+  const opened = await h.open({ path: "note.md" }, human);
+  assert.equal(opened.title, "note.md");
+});
