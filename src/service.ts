@@ -31,6 +31,12 @@ function human(ctx: FeatureInvocationContext) {
   )
     throw new Error("This action is only available from the human editor.");
 }
+function sessionWrite(ctx: FeatureInvocationContext) {
+  if (ctx.source !== "session-action") return;
+  const scopes = ctx.action.client?.scopes ?? [];
+  if (!scopes.includes("operator.write") && !scopes.includes("operator.admin"))
+    throw new Error("This action is only available from the human editor.");
+}
 function revision(doc: Document, expected: number) {
   if (doc.revision !== expected)
     throw new Error(
@@ -100,6 +106,7 @@ export function createHandlers(
     },
     files: (input, ctx) => listMarkdown(workspace(ctx), input.query),
     open: async (input, ctx) => {
+      sessionWrite(ctx);
       const root = workspace(ctx);
       const file = await readMarkdown(root, input.path);
       const doc = await mutate(ctx, async (doc) => {
@@ -136,15 +143,17 @@ export function createHandlers(
         }
       });
     },
-    create: (input, ctx) =>
-      mutate(ctx, (doc) => {
+    create: async (input, ctx) => {
+      sessionWrite(ctx);
+      return mutate(ctx, (doc) => {
         if (doc.revision !== 0 || doc.comments.length || doc.proposals.length)
           throw new Error("This document is already in use. Propose changes for approval instead.");
         nonempty(input.title);
         doc.title = input.title;
         doc.markdown = input.markdown;
         doc.revision++;
-      }),
+      });
+    },
     save_as: async (input, ctx) => {
       human(ctx);
       const root = workspace(ctx);
@@ -255,8 +264,9 @@ export function createHandlers(
         });
       });
     },
-    reply: (input, ctx) =>
-      mutate(ctx, (doc) => {
+    reply: async (input, ctx) => {
+      sessionWrite(ctx);
+      return mutate(ctx, (doc) => {
         nonempty(input.body);
         const c = doc.comments.find((c) => c.id === input.commentId);
         if (!c) throw new Error("Comment not found.");
@@ -267,7 +277,8 @@ export function createHandlers(
           author: ctx.source === "tool" ? "agent" : "you",
           createdAt: new Date().toISOString(),
         });
-      }),
+      });
+    },
     resolve: (input, ctx) => {
       human(ctx);
       return mutate(ctx, (doc) => {
@@ -276,8 +287,9 @@ export function createHandlers(
         c.resolved = input.resolved;
       });
     },
-    propose: (input, ctx) =>
-      mutate(ctx, (doc) => {
+    propose: async (input, ctx) => {
+      sessionWrite(ctx);
+      return mutate(ctx, (doc) => {
         revision(doc, input.revision);
         uniquePosition(doc.markdown, input.before);
         nonempty(input.reason);
@@ -296,7 +308,8 @@ export function createHandlers(
           status: "pending",
           createdAt: new Date().toISOString(),
         });
-      }),
+      });
+    },
     review: (input, ctx) => {
       human(ctx);
       return mutate(
